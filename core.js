@@ -3,12 +3,11 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const r6 = () => 1 + Math.floor(Math.random()*6);
 
-let mode = null;          // 'local' | 'host' | 'client'
-let S = null;             // starea jocului (autoritar la gazda)
+let mode = null;
+let S = null;
 let myId = null, peer = null, conns = {}, hostConn = null;
 let N = 3, rollTimer = null, rollGen = 0, lastRound = -1, wake = null;
 
-/* ---------- ecrane ---------- */
 function show(name){
   ['home','localSetup','lobby','game'].forEach(id => $(id).classList.toggle('hide', id !== name));
 }
@@ -30,6 +29,6 @@ function leaveToHome(msg){
   show('home'); homeMsg(msg || '');
 }
 function confirmLeave(){
-  if(confirm('Sigur vrei să ieși?')) leaveToHome(''
-                                                );
-}
+  if(confirm('Sigur vrei să ieși?')) leaveToHome('')
+    ;
+  }
