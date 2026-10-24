@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0f3d2e">
+<title>Barbut</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <h1>BARBUT</h1>
+
+  <!-- HOME -->
+  <div id="home">
+    <div class="card">
+      <h2 style="margin-top:0">Numele tău</h2>
+      <input id="myName" placeholder="Ex: Andrei" maxlength="14" autocomplete="off">
+    </div>
+    <button class="big" onclick="createRoom()">Creează cameră online</button>
+    <div class="card">
+      <h2 style="margin-top:0">Ai un cod?</h2>
+      <div class="row">
+        <input id="joinCode" placeholder="COD" maxlength="4" autocomplete="off" autocapitalize="characters" style="text-transform:uppercase;text-align:center;font-size:20px;letter-spacing:4px">
+        <button onclick="joinRoom()" style="flex:0 0 auto">Intră</button>
+      </div>
+    </div>
+    <div class="err" id="homeMsg"></div>
+    <div class="sep">sau</div>
+    <button class="big sec" onclick="show('localSetup')">Joc pe acest telefon</button>
+  </div>
+
+  <!-- LOCAL SETUP -->
+  <div id="localSetup" class="hide">
+    <div class="card">
+      <h2 style="margin-top:0">Câți jucători?</h2>
+      <div class="row pick" id="nPick"></div>
+      <h2>Nume jucători</h2>
+      <div id="names"></div>
+      <h2>Credite de start</h2>
+      <input id="startCr" type="number" inputmode="numeric" value="1000" min="10">
+    </div>
+    <button class="big" onclick="startLocal()">Începe jocul</button>
+    <button class="big sec" onclick="show('home')">Înapoi</button>
+  </div>
+
+  <!-- LOBBY -->
+  <div id="lobby" class="hide">
+    <div class="card">
+      <div class="small">Codul camerei</div>
+      <div class="code" id="roomCode"></div>
+      <button class="sec" style="width:100%" onclick="shareCode()">Trimite codul</button>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0">Jucători în cameră</h2>
+      <div class="players" id="lobbyList"></div>
+      <div class="small" id="lobbyCr"></div>
+    </div>
+    <div id="hostCtl">
+      <div class="card">
+        <h2 style="margin-top:0">Credite de start</h2>
+        <input id="lobbyCrIn" type="number" inputmode="numeric" value="1000" min="10" oninput="setStartCr()">
+      </div>
+      <button class="big" id="startBtn" onclick="hostStart()">Pornește jocul</button>
+    </div>
+    <div class="small hide" id="waitHost">Aștept ca gazda să pornească jocul...</div>
+    <button class="big sec" style="margin-top:12px" onclick="confirmLeave()">Ieși din cameră</button>
+  </div>
+
+  <!-- GAME -->
+  <div id="game" class="hide">
+    <div class="card players" id="plist"></div>
+    <div class="card">
+      <div id="stakeBox">
+        <h2 id="shooterLbl" style="margin-top:0">Alege miza</h2>
+        <div class="stake">
+          <button class="sec" onclick="adj(-1)">-</button>
+          <input id="stake" type="number" inputmode="numeric" value="50" onchange="clampStake()" onblur="clampStake()">
+          <button class="sec" onclick="adj(1)">+</button>
+        </div>
+        <div class="small" id="stakeRange" style="margin-top:6px"></div>
+        <div class="row" style="margin-top:8px">
+          <button class="sec" onclick="setStake('min')">Min</button>
+          <button class="sec" onclick="setStake('half')">½</button>
+          <button class="sec" onclick="setStake('max')">Max</button>
+        </div>
+      </div>
+      <div class="dice">
+        <div class="die" id="d1"></div>
+        <div class="die" id="d2"></div>
+      </div>
+      <div class="msg" id="msg"></div>
+      <div class="hint" id="hint"></div>
+      <button class="big" id="rollBtn" onclick="mainBtn()">Aruncă zarurile</button>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0">Istoric</h2>
+      <div class="log" id="log"></div>
+    </div>
+    <button class="sec" style="width:100%" onclick="confirmLeave()">Ieși din joc</button>
+  </div>
+</div>
+
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="core.js"></script>
+<script src="engine.js"></script>
+<script src="local.js"></script>
+<script src="network.js"></script>
+<script src="ui.js"></script>
+<script src="main.js"></script>
+</body>
+  
+</html>
