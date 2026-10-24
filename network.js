@@ -1,3 +1,14 @@
+const PEER_OPTS = {
+  config: {
+    iceServers: [
+      { urls: 'stun:stun.l.google.com:19302' },
+      { urls: 'stun:global.stun.twilio.com:3478' },
+      { urls: 'turn:eu-0.turn.peerjs.com:3478', username: 'peerjs', credential: 'peerjsp' },
+      { urls: 'turn:us-0.turn.peerjs.com:3478', username: 'peerjs', credential: 'peerjsp' },
+      { urls: ['turn:openrelay.metered.ca:80', 'turn:openrelay.metered.ca:443', 'turn:openrelay.metered.ca:443?transport=tcp'], username: 'openrelayproject', credential: 'openrelayproject' }
+    ]
+  }
+};
 function genCode(){
   const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let c = '';
   for(let i=0;i<4;i++) c += A[Math.floor(Math.random()*A.length)];
@@ -12,7 +23,7 @@ function createRoom(){
 }
 function tryHost(name, attempt){
   const code = genCode();
-  const p = new Peer('barbut-' + code);
+  const p = new Peer('barbut-' + code, PEER_OPTS);
   p.on('open', id => {
     peer = p; mode = 'host'; myId = id; conns = {};
     S = newState(code);
@@ -104,12 +115,18 @@ function joinRoom(){
   const name = cleanName($('myName').value) || 'Jucător';
   saveName(name);
   homeMsg('Se conectează...');
-  const p = new Peer();
-  let opened = false;
+  const p = new Peer(undefined, PEER_OPTS);
+  let opened = false, serverOk = false;
   const to = setTimeout(() => {
-    if(!opened){ homeMsg('Nu m-am putut conecta. Verifică codul și internetul.'); try{p.destroy();}catch(e){} }
-  }, 12000);
+    if(!opened){
+      homeMsg(serverOk
+        ? 'Am găsit serverul, dar nu mă pot conecta la gazdă. Gazda să țină aplicația deschisă, iar voi încercați pe același Wi-Fi.'
+        : 'Nu pot ajunge la serverul PeerJS. Verifică internetul.');
+      try{p.destroy();}catch(e){}
+    }
+  }, 20000);
   p.on('open', id => {
+    serverOk = true;
     const c = p.connect('barbut-' + code, { reliable:true });
     c.on('open', () => {
       opened = true; clearTimeout(to);
@@ -130,4 +147,4 @@ function joinRoom(){
       try{p.destroy();}catch(x){}
     }
   });
-}
+  }
