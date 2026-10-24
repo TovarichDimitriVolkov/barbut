@@ -94,4 +94,5 @@ function endGame(prefix){
 function hostNext(){
   if(!S || S.phase !== 'roundEnd') return;
   advanceShooter(); startBet();
+
 }
